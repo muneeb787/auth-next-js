@@ -5,7 +5,7 @@ import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';   
+import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 const LoginPage = () => {
@@ -39,8 +39,8 @@ const LoginPage = () => {
     return (
         <div className="flex items-center justify-center h-screen">
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage.src})`, filter: 'blur(10px)' }}></div>
-            <div className="z-10 w-1/2 flex p-2 bg-white  rounded-3xl shadow-lg">
-                <div className='w-96 rounded-lg mx-20 my-5 text-black'>
+            <div className="z-10 lg:w-1/2 w-full flex flex-col lg:flex-row p-2 bg-white  rounded-3xl shadow-lg">
+                <div className='w-96 rounded-lg lg:mx-20 mx-5 my-5 text-black'>
                     <h4 className='text-center font-medium text-lg'>Recova</h4>
                     <h2 className='text-center text-4xl font-medium my-5'>Login To Recova</h2>
                     <p className='text-center text-sm text-gray-600 my-5'>Recova is a fast, simple and secure way to recover
@@ -63,14 +63,14 @@ const LoginPage = () => {
                     <p className='text-center text-xs text-gray-600 my-5'>{notification}</p>
                     <div className='text-center text-sm flex justify-center text-gray-600 my-5'>
                         <p className='' >Want to Create Account? </p>
-                        <a onClick={()=>{router.push('/signup');}} className='text-red-800 font-medium pl-2' href='#'> Sign Up</a>
+                        <a onClick={() => { router.push('/signup'); }} className='text-red-800 font-medium pl-2' href='#'> Sign Up</a>
                     </div>
                     <p className='text-center text-xs text-gray-600 my-5'>By signing up, you agree to Our&nbsp;
                         <a className='text-blue-500 text-xs' href='#'>Terms of Use</a> &nbsp;and&nbsp;
                         <a className='text-blue-500 text-xs' href='#'>Privacy Policy</a>
                     </p>
                 </div>
-                <div className='w-1/2 rounded-3xl'>
+                <div className='lg:w-1/2 w-full rounded-3xl'>
                     <Image className='rounded-3xl object-cover h-full' src={backgroundImage} alt="" />
                 </div>
             </div>
