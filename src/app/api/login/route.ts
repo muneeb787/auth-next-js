@@ -1,32 +1,31 @@
+// api/login/route.ts
 import { NextResponse } from 'next/server';
-
-export async function GET(request: Request) {
-  // Handle GET request
-  return NextResponse.json({ message: 'GET request received' });
-}
+import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
-  // Handle POST request
-  const body = await request.json();
-  // Do something with the request body
-  console.log(body);
+    const cookieStore = cookies();
+    const body = await request.json();
+    const { email, password } = body;
 
-  // Retrieve data from local storage
-  const storedUserDataString = localStorage.getItem('userData');
-  if (storedUserDataString) {
-    const storedUserData = JSON.parse(storedUserDataString);
+    // Get user data from cookies or database
+    const storedUserDataString = cookieStore.get('userData')?.value;
+    if (storedUserDataString) {
+        const storedUserData = JSON.parse(storedUserDataString);
 
-    // Compare stored data with received data
-    if (storedUserData && storedUserData.username === body.username && storedUserData.email === body.email) {
-      // User is logged in
-      console.log('User is logged in');
-      return NextResponse.json({ message: 'User is logged in', isLoggedIn: true });
+        // Compare entered email and password with stored data
+        if (email === storedUserData.email && password === storedUserData.password) {
+            // Generate an access token or session token
+            const accessToken = 'your_access_token';
+
+            // Set the access token in a cookie
+            cookieStore.set('accessToken', accessToken, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 7, // 1 week
+            });
+
+            return NextResponse.json({ success: true, message: 'Login successful!', accessToken });
+        }
     }
-  }
 
-  // User is not logged in
-  console.log('User is not logged in');
-  return NextResponse.json({ message: 'User is not logged in', isLoggedIn: false });
+    return NextResponse.json({ success: false, message: 'Invalid email or password.' });
 }
-
-// Add other HTTP method handlers as needed

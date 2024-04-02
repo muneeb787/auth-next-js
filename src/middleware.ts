@@ -1,34 +1,32 @@
-import { NextResponse } from "next/server";
-export async function middleware(request: { nextUrl: { pathname: string; }; cookies: { get: (arg0: string) => { (): any; new(): any; value: any; }; }; url: string | URL | undefined; }) {
-  if (request.nextUrl.pathname.startsWith("/_next")) {
-    return NextResponse.next();
-  }
-  if (request.nextUrl.pathname == "/signup") {
-    return NextResponse.next();
-  }
-  const accessToken = request.cookies.get("accessToken")?.value;
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-  if (!accessToken && request.nextUrl.pathname !== "/login") {
-    return NextResponse.redirect(new URL("/login", request.url));
+export function middleware(req: NextRequest) {
+  const { pathname, origin } = req.nextUrl;
+  const isAuthenticated = req.cookies.get('accessToken'); // Check if the user is authenticated (e.g., by checking for a token in the cookies)
+
+  if (!isAuthenticated && protectedRoutes.includes(pathname)) {
+    return NextResponse.redirect(`${origin}/login`);
   }
-  if (accessToken && request.nextUrl.pathname == "/login") {
-    return NextResponse.redirect(new URL("/", request.url));
+
+  if (isAuthenticated && pathname === '/login') {
+    return NextResponse.redirect(`${origin}/`);
   }
-  if (accessToken && request.nextUrl.pathname == "/signup") {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-  let tokenPayload;
-  try {
-    if (accessToken) {
-      const tokenParts = accessToken.split(".");
-      const payloadBase64 = tokenParts[1];
-      const decodedPayload = Buffer.from(payloadBase64, "base64").toString(
-        "utf-8"
-      );
-      tokenPayload = JSON.parse(decodedPayload);
-    }
-  } catch (error) {
-    console.error("Error decoding access token:", error);
-  }
+
   return NextResponse.next();
 }
+
+const protectedRoutes = ['/'];
+
+export const config = {
+  matcher: [
+    /*
+     * Match all paths except for:
+     * 1. /api route
+     * 2. /_next/static (Static Image Import)
+     * 3. /_next/image (Image Optimization Files)
+     * 4. /favicon.ico (Favicon File)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};
