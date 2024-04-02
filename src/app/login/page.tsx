@@ -7,6 +7,7 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 const LoginPage = () => {
     const router = useRouter();
@@ -15,24 +16,22 @@ const LoginPage = () => {
     const [notification, setNotification] = useState('');
 
     const handleSubmit = async () => {
-        // Get user data from cookies
-        const storedUserDataString = Cookies.get('userData');
-        if (storedUserDataString) {
-            const storedUserData = JSON.parse(storedUserDataString);
-            // Compare entered email and password with stored data
-            if (email === storedUserData.email && password === storedUserData.password) {
-                toast.success('Login successful!');
-                console.log('Login successful!');
-                Cookies.set('accessToken', "user_logged_in");
+        try {
+            const response = await axios.post('/api/login', { email, password });
+            const { success, message, accessToken } = response.data;
+
+            if (success) {
+                toast.success(message);
+                console.log(message);
+                Cookies.set('accessToken', accessToken);
                 router.push('/');
-                // Redirect or handle successful login
             } else {
-                toast.error('Login failed. Invalid email or password.');
-                console.log('Login failed. Invalid email or password.');
+                toast.error(message);
+                console.log(message);
             }
-        } else {
-            toast.error('No user data found. Please sign up first.');
-            console.log('No user data found. Please sign up first.');
+        } catch (error) {
+            console.error('Error logging in:', error);
+            toast.error('An error occurred while logging in. Please try again.');
         }
     };
 
