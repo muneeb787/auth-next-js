@@ -40,7 +40,7 @@ const LoginPage = () => {
         <div className="flex items-center justify-center h-screen">
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage.src})`, filter: 'blur(10px)' }}></div>
             <div className="z-10 lg:w-1/2 w-full flex flex-col lg:flex-row p-2 bg-white  rounded-3xl shadow-lg">
-                <div className='w-96 rounded-lg lg:mx-20 mx-5 my-5 text-black'>
+                <div className='lg:w-96 w-full rounded-lg lg:mx-20  my-5 text-black'>
                     <h4 className='text-center font-medium text-lg'>Recova</h4>
                     <h2 className='text-center text-4xl font-medium my-5'>Login To Recova</h2>
                     <p className='text-center text-sm text-gray-600 my-5'>Recova is a fast, simple and secure way to recover
