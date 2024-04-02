@@ -15,20 +15,24 @@ const SignUpPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSignUp = () => {
-        // Validate user input here if needed
-
-        // Save user data to cookies
-        const userData = {
-            username,
-            email,
-            password
-        };
-        Cookies.set('userData', JSON.stringify(userData)); // Save user data in cookies
-        toast.success("Signup successful");
-        console.log('Signup successful, user data saved to cookies:', userData);
-        router.push('/login');
-        // You can handle success or redirect user here
+    const handleSignUp = async () => {
+        try {
+            const response = await axios.post('/api/signup', { username, email, password });
+            console.log(response)
+            const { success, message } = response.data;
+            console.log(success, message);
+            if (success) {
+                toast.success(message);
+                console.log(message);
+                router.push('/login');
+            } else {
+                toast.error(message);
+                console.log(message);
+            }
+        } catch (error) {
+            console.error('Error signing up:', error);
+            toast.error('An error occurred while signing up. Please try again.');
+        }
     };
 
     return (
